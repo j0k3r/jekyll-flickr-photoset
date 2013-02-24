@@ -1,0 +1,6 @@
+flickr:
+  cache_dir:       ./_cache/flickr
+  api_key:          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  shared_secret:    xxxxxxxxxxxxxxxx
+  access_token:     xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx
+  access_secret:    xxxxxxxxxxxxxxxx
