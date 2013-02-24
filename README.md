@@ -64,6 +64,10 @@ So you need to load it:
     })
     </script>
 
+## Todo
+
+- handle fullscreen slideshow and use `urlOpened` image
+
 ## Inspiration
 
 I've looked inside :
