@@ -7,7 +7,7 @@ I was moving from Posterous to Jekyll and I was looking for a slideshow gallery 
 ## Usage
 
     {% flickr_photoset 12345678901234567 %}
-    {% flickr_photoset 12345678901234567 "Square" "Medium 640" "Large" %}
+    {% flickr_photoset 12345678901234567 "Square" "Medium 640" "Large" "Site MP4" %}
 
 Where:
 
@@ -15,6 +15,7 @@ Where:
 - `"Square"` is the size for the thumbnail image (*which also the one by default*)
 - `"Medium 640"` is the size for the displayed image (*which also the one by default*)
 - `"Large"` is the size for the opened image (*which also the one by default*)
+- `"Site MP4"` is the format for the video in case photoset include a video (*which also the one by default*)
 
 Other Flickr size can be found [here](http://www.flickr.com/services/api/flickr.photos.getSizes.html).
 
@@ -47,26 +48,17 @@ Then put them inside `_config.yml` (where `flickr:` is defined on the root level
 
 There is also an ability to generate cache. It will put all images references from each photoset. It will save **a lot of time** when you will have to regenerate all your posts. Cache are written in a yml file. Photoset ID is the file name.
 
-#### [AD Gallery](http://adgallery.codeplex.com/)
+#### Rendering
+
+##### [Foundation Clearing](http://foundation.zurb.com/docs/components/clearing.html)
+
+The master branch use Clearing, from Foundation, to display a kind of gallery. It handles a list of images, and a fullscreen slideshow.
+
+##### [AD Gallery](http://adgallery.codeplex.com/)
+
 This is the plugin used to generate the slideshow gallery, which is almost the same from Posterous. You will find references in `adgallery` folder, I put the latest version (1.2.7).
 
-So you need to load it:
-
-    <link rel="stylesheet" href="/ad-gallery/jquery.ad-gallery.css" />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/ad-gallery/jquery.ad-gallery.js?rand=302"></script>
-    <script type="text/javascript">
-    $(function() {
-      var galleries = $('.ad-gallery').adGallery({
-        loader_image: '/ad-gallery/loader.gif',
-        width: 640,
-      });
-    })
-    </script>
-
-## Todo
-
-- handle fullscreen slideshow and use `urlOpened` image
+If you want to use it, switch to the [ad-gallery](https://github.com/j0k3r/jekyll-flickr-photoset/tree/ad-gallery) branch. I didn't test it under Jekyll 1.0.
 
 ## Inspiration
 

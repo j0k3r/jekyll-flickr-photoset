@@ -5,7 +5,7 @@
 # Usage:
 #
 #   {% flickr_photoset 72157624158475427 %}
-#   {% flickr_photoset 72157624158475427 "Square" "Medium 640" "Large" %}
+#   {% flickr_photoset 72157624158475427 "Square" "Medium 640" "Large" "Site MP4" %}
 #
 # For futher information please visit: https://github.com/j0k3r/jekyll-flickr-photoset
 #
@@ -20,15 +20,14 @@ module Jekyll
   class FlickrPhotosetTag < Liquid::Tag
 
     def initialize(tag_name, markup, tokens)
-
       super
       params = Shellwords.shellwords markup
 
       @photoset       = params[0]
-      @photoThumbnail = params[1] || "Square"
-      @photoEmbeded   = params[2] || "Medium 640"
+      @photoThumbnail = params[1] || "Large Square"
+      @photoEmbeded   = params[2] || "Medium 800"
       @photoOpened    = params[3] || "Large"
-
+      @video          = params[4] || "Site MP4"
     end
 
     def render(context)
@@ -36,7 +35,7 @@ module Jekyll
       flickrConfig = context.registers[:site].config["flickr"]
 
       if cache_dir = flickrConfig['cache_dir']
-        path = File.join(cache_dir, "#{@photoset}.yml")
+        path = File.join(cache_dir, "#{@photoset}-#{@photoThumbnail}-#{@photoEmbeded}-#{@photoOpened}-#{@video}.yml")
         if File.exist?(path)
           photos = YAML::load(File.read(path))
         else
@@ -48,43 +47,44 @@ module Jekyll
       end
 
       if photos.count == 1
-
-        output = "<img src=\"#{photos[0].urlEmbeded}\" title=\"#{photos[0].title}\" longdesc=\"#{photos[0].title}\" alt=\"#{photos[0].title}\" />\n"
-
+        if photos[0]['urlVideo'] != ''
+          output = "<p style=\"text-align: center;\">\n"
+          output += "  <video controls poster=\"#{photos[0]['urlEmbeded']}\">\n"
+          output += "    <source src=\"#{photos[0]['urlVideo']}\" type=\"video/mp4\" />\n"
+          output += "  </video>\n"
+          output += "  <br/><span class=\"alt-flickr\"><a href=\"#{photos[0]['urlFlickr']}\" target=\"_blank\">Voir la video en grand</a></span>\n"
+          output += "</p>\n"
+        else
+          output = "<p style=\"text-align: center;\"><img class=\"th\" src=\"#{photos[0]['urlEmbeded']}\" title=\"#{photos[0]['title']}\" longdesc=\"#{photos[0]['title']}\" alt=\"#{photos[0]['title']}\" /></p>\n"
+        end
       else
-
-        output = "<div id=\"gallery-#{@photoset}\" class=\"ad-gallery\">\n"
-        output += "  <div class=\"ad-image-wrapper\"></div>\n"
-        output += "  <div class=\"ad-controls\"></div>\n"
-        output += "  <div class=\"ad-nav\">\n"
-        output += "    <div class=\"ad-thumbs\">\n"
-        output += "      <ul class=\"ad-thumb-list\">\n"
+        output = "<div class=\"row\">\n"
+        output += "  <div class=\"large-11 columns large-centered\">\n"
+        output += "    <ul class=\"clearing-thumbs\" data-clearing>\n"
 
         photos.each_with_index do |photo, i|
-
-          output += "      <li>\n"
-          # custom id needed to correctly handle multiple gallery on the same page
-          output += "        <a id=\"photo-#{@photoset}-#{i}\" href=\"#{photo.urlEmbeded}\">\n"
-          output += "          <img src=\"#{photo.urlThumb}\" longdesc=\"#{photo.urlOpened}\" class=\"image-#{i}\" />\n"
-          output += "        </a>\n"
-          output += "      </li>\n"
-
+          if photo['urlVideo'] != ''
+            output += "      <li>\n"
+            output += "        <video controls poster=\"#{photo['urlEmbeded']}\">\n"
+            output += "          <source src=\"#{photo['urlVideo']}\" type=\"video/mp4\" />\n"
+            output += "        </video>\n"
+            output += "        <br/><span class=\"alt-flickr\"><a href=\"#{photo['urlFlickr']}\" target=\"_blank\">Voir la video en grand</a></span>\n"
+            output += "      </li>\n"
+          else
+            output += "      <li><a class=\"th\" href=\"#{photo['urlOpened']}\"><img src=\"#{photo['urlThumb']}\"></a></li>\n"
+          end
         end
 
-        output += "      </ul>\n"
-        output += "    </div>\n"
+        output += "    </ul>\n"
         output += "  </div>\n"
         output += "</div>\n"
-
       end
 
       # return content
       output
-
     end
 
     def generate_photo_data(photoset, flickrConfig)
-
       returnSet = Array.new
 
       FlickRaw.api_key       = flickrConfig['api_key']
@@ -98,47 +98,51 @@ module Jekyll
         raise "Bad token: #{flickrConfig['access_token']}"
       end
 
-      photos = flickr.photosets.getPhotos :photoset_id => photoset
+      begin
+        photos = flickr.photosets.getPhotos :photoset_id => photoset
+      rescue Exception => e
+        raise "Bad photoset: #{photoset}"
+      end
 
       photos.photo.each_index do | i |
 
-        title      = photos.photo[i].title
-        id         = photos.photo[i].id
+        title = photos.photo[i].title
+        id    = photos.photo[i].id
+
         urlThumb   = String.new
         urlEmbeded = String.new
         urlOpened  = String.new
+        urlVideo   = String.new
 
         sizes = flickr.photos.getSizes(:photo_id => id)
 
-        urlThumb   = sizes.find {|s| s.label == @photoThumbnail }
-        urlEmbeded = sizes.find {|s| s.label == @photoEmbeded }
-        urlOpened  = sizes.find {|s| s.label == @photoOpened }
+        urlThumb       = sizes.find {|s| s.label == @photoThumbnail }
+        urlEmbeded     = sizes.find {|s| s.label == @photoEmbeded }
+        urlOpened      = sizes.find {|s| s.label == @photoOpened }
+        urlVideo       = sizes.find {|s| s.label == @video }
 
-        photo = FlickrPhoto.new(title, urlThumb.source, urlEmbeded.source, urlOpened.source)
+        photo = FlickrPhoto.new(title, urlThumb, urlEmbeded, urlOpened, urlVideo)
         returnSet.push photo
-
       end
 
       # sleep a little so that you don't get in trouble for bombarding the Flickr servers
       sleep 1
 
       returnSet
-
     end
-
   end
 
   class FlickrPhoto
+    attr_accessor :title, :urlThumb, :urlEmbeded, :urlOpened, :urlVideo, :urlFlickr
 
-    attr_accessor :title, :urlThumb, :urlEmbeded, :urlOpened
-
-    def initialize(title, urlThumb, urlEmbeded, urlOpened)
+    def initialize(title, urlThumb, urlEmbeded, urlOpened, urlVideo)
       @title      = title
-      @urlThumb   = urlThumb
-      @urlEmbeded = urlEmbeded
-      @urlOpened  = urlOpened
+      @urlThumb   = urlThumb ? urlThumb.source : ''
+      @urlEmbeded = urlEmbeded ? urlEmbeded.source : ''
+      @urlOpened  = urlOpened ? urlOpened.source : ''
+      @urlVideo   = urlVideo ? urlVideo.source : ''
+      @urlFlickr  = urlVideo ? urlVideo.url : ''
     end
-
   end
 
 end
