@@ -6,8 +6,10 @@ I was moving from Posterous to Jekyll and I was looking for a slideshow gallery 
 
 ## Usage
 
-    {% flickr_photoset 12345678901234567 %}
-    {% flickr_photoset 12345678901234567 "Square" "Medium 640" "Large" "Site MP4" %}
+```
+{% flickr_photoset 12345678901234567 %}
+{% flickr_photoset 12345678901234567 "Square" "Medium 640" "Large" "Site MP4" %}
+```
 
 Where:
 
@@ -25,7 +27,9 @@ Other Flickr size can be found [here](http://www.flickr.com/services/api/flickr.
 
 *Flickraw is a library to access flickr api in a simple way.*
 
-    gem install flickraw
+```
+gem install flickraw
+```
 
 #### A Flickr API key
 
@@ -39,12 +43,14 @@ And follow instructions on [the FlickRaw page for authentication](http://hanklor
 
 Then put them inside `_config.yml` (where `flickr:` is defined on the root level):
 
-    flickr:
-      cache_dir:       ./_cache/flickr
-      api_key:          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-      shared_secret:    xxxxxxxxxxxxxxxx
-      access_token:     xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx
-      access_secret:    xxxxxxxxxxxxxxxx
+```yaml
+flickr:
+  cache_dir:       "./_cache/flickr"
+  api_key:          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  shared_secret:    xxxxxxxxxxxxxxxx
+  access_token:     xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx
+  access_secret:    xxxxxxxxxxxxxxxx
+```
 
 There is also an ability to generate cache. It will put all images references from each photoset. It will save **a lot of time** when you will have to regenerate all your posts. Cache are written in a yml file. Photoset ID is the file name.
 
