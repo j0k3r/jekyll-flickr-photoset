@@ -31,10 +31,18 @@ module Jekyll
     end
 
     def render(context)
+      # hack to convert a variable into an actual flickr set id
+      if @photoset =~ /([\w]+\.[\w]+)/i
+        @photoset = Liquid::Template.parse('{{ '+@photoset+' }}').render context
+      end
 
       flickrConfig = context.registers[:site].config["flickr"]
 
       if cache_dir = flickrConfig['cache_dir']
+        if !Dir.exist?(cache_dir)
+          Dir.mkdir(cache_dir, 0777)
+        end
+
         path = File.join(cache_dir, "#{@photoset}-#{@photoThumbnail}-#{@photoEmbeded}-#{@photoOpened}-#{@video}.yml")
         if File.exist?(path)
           photos = YAML::load(File.read(path))
