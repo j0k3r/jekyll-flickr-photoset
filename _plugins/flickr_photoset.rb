@@ -70,7 +70,7 @@ module Jekyll
         output += "  <div class=\"large-11 columns large-centered\">\n"
         output += "    <ul class=\"clearing-thumbs\" data-clearing>\n"
 
-        photos.each_with_index do |photo, i|
+        photos.each do |photo|
           if photo['urlVideo'] != ''
             output += "      <li>\n"
             output += "        <video controls poster=\"#{photo['urlEmbeded']}\">\n"
@@ -129,7 +129,15 @@ module Jekyll
         urlOpened      = sizes.find {|s| s.label == @photoOpened }
         urlVideo       = sizes.find {|s| s.label == @video }
 
-        photo = FlickrPhoto.new(title, urlThumb, urlEmbeded, urlOpened, urlVideo)
+        photo = {
+          'title' => title,
+          'urlThumb' => urlThumb ? urlThumb.source : '',
+          'urlEmbeded' => urlEmbeded ? urlEmbeded.source : '',
+          'urlOpened' => urlOpened ? urlOpened.source : '',
+          'urlVideo' => urlVideo ? urlVideo.source : '',
+          'urlFlickr' => urlVideo ? urlVideo.url : '',
+        }
+
         returnSet.push photo
       end
 
@@ -137,19 +145,6 @@ module Jekyll
       sleep 1
 
       returnSet
-    end
-  end
-
-  class FlickrPhoto
-    attr_accessor :title, :urlThumb, :urlEmbeded, :urlOpened, :urlVideo, :urlFlickr
-
-    def initialize(title, urlThumb, urlEmbeded, urlOpened, urlVideo)
-      @title      = title
-      @urlThumb   = urlThumb ? urlThumb.source : ''
-      @urlEmbeded = urlEmbeded ? urlEmbeded.source : ''
-      @urlOpened  = urlOpened ? urlOpened.source : ''
-      @urlVideo   = urlVideo ? urlVideo.source : ''
-      @urlFlickr  = urlVideo ? urlVideo.url : ''
     end
   end
 
