@@ -2,7 +2,9 @@
 
 It's a Jekyll plugin for embedding Flickr photosets in your Liquid templates.
 
-I was moving from Posterous to Jekyll and I was looking for a slideshow gallery like Posteours has. You put a simple tag with a Flickr photoset ID inside your post and it builds a slideshow gallery. So I made it: one tag generate a gallery, no more. Dead simple.
+I was moving from Posterous to Jekyll and I was looking for a slideshow gallery like Posterous had. You put a simple tag with a Flickr photoset ID inside your post and it builds a slideshow gallery. So I made it: one tag generates a gallery, no more. Dead simple.
+
+Here is an example of this integration: [http://blog.wildtrip.net](http://blog.wildtrip.net/)
 
 ## Usage
 
@@ -25,7 +27,7 @@ Other Flickr size can be found [here](http://www.flickr.com/services/api/flickr.
 
 #### FlickRaw
 
-*Flickraw is a library to access flickr api in a simple way.*
+*Flickraw is a library to access flickr API in a simple way.*
 
 ```
 gem install flickraw
@@ -64,7 +66,7 @@ The master branch use Clearing, from Foundation, to display a kind of gallery. I
 
 This is the plugin used to generate the slideshow gallery, which is almost the same from Posterous. You will find references in `adgallery` folder, I put the latest version (1.2.7).
 
-If you want to use it, switch to the [ad-gallery](https://github.com/j0k3r/jekyll-flickr-photoset/tree/ad-gallery) branch. I didn't test it under Jekyll 1.0.
+If you want to use it, switch to the [ad-gallery](https://github.com/j0k3r/jekyll-flickr-photoset/tree/ad-gallery) branch. I didn't test it under Jekyll 1.0+.
 
 ## Inspiration
 
