@@ -21,7 +21,7 @@ Where:
 - `"Large"` is the size for the opened image (*which also the one by default*)
 - `"Site MP4"` is the format for the video in case photoset include a video (*which also the one by default*)
 
-Other Flickr size can be found [here](http://www.flickr.com/services/api/flickr.photos.getSizes.html).
+Other Flickr size can be found [here](https://www.flickr.com/services/api/flickr.photos.getSizes.html).
 
 ## Requirements
 
@@ -35,11 +35,11 @@ gem install flickraw
 
 #### A Flickr API key
 
-You can obtain a Flickr API key [here](http://www.flickr.com/services/apps/create/).
-And follow instructions on [the FlickRaw page for authentication](http://hanklords.github.com/flickraw/):
+You can obtain a Flickr API key [here](https://www.flickr.com/services/apps/create/).
+And follow instructions on [the FlickRaw page for authentication](http://hanklords.github.io/flickraw/#label-Authentication):
 
   - create a `flickr.rb` file with content of "Authentication" bloc code
-  - replace api key by the one previously generated on the Flickr website
+  - replace `api_key` & `shared_secret` by the one previously generated on the Flickr website
   - launch it with `ruby -rubygems flickr.rb`
   - follow instructions
 
