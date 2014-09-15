@@ -87,15 +87,15 @@ module Jekyll
 
       returnSet = Array.new
 
-      FlickRaw.api_key       = flickrConfig['api_key']
-      FlickRaw.shared_secret = flickrConfig['shared_secret']
-      flickr.access_token    = flickrConfig['access_token']
-      flickr.access_secret   = flickrConfig['access_secret']
+      FlickRaw.api_key       = ENV['FLICKR_API_KEY'] || flickrConfig['api_key']
+      FlickRaw.shared_secret = ENV['FLICKR_SHARED_SECRET'] || flickrConfig['shared_secret']
+      flickr.access_token    = ENV['FLICKR_ACCESS_TOKEN'] || flickrConfig['access_token']
+      flickr.access_secret   = ENV['FLICKR_ACCESS_SECRET'] || flickrConfig['access_secret']
 
       begin
         flickr.test.login
       rescue Exception => e
-        raise "Bad token: #{flickrConfig['access_token']}"
+        raise "Unable to login, please check documentation for correctly configuring Environment Variables, or _config.yaml."
       end
 
       photos = flickr.photosets.getPhotos :photoset_id => photoset
