@@ -18,10 +18,11 @@ require 'shellwords'
 module Jekyll
 
   class FlickrPhotosetTag < Liquid::Tag
+    include Jekyll::LiquidExtensions
 
     def initialize(tag_name, markup, tokens)
       super
-      params = Shellwords.shellwords markup
+      params = Shellwords.split(markup)
 
       @photoset       = params[0]
       @photoThumbnail = params[1] || "Large Square"
@@ -31,9 +32,9 @@ module Jekyll
     end
 
     def render(context)
-      # hack to convert a variable into an actual flickr set id
+      # convert a variable (for example `page.gallery_id`) into an actual flickr set id
       if @photoset =~ /([\w]+\.[\w]+)/i
-        @photoset = Liquid::Template.parse('{{ '+@photoset+' }}').render context
+        @photoset = lookup_variable(context, @photoset)
       end
 
       flickrConfig = context.registers[:site].config["flickr"]
