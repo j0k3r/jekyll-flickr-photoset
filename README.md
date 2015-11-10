@@ -54,6 +54,13 @@ flickr:
   access_secret:    xxxxxxxxxxxxxxxx
 ```
 
+Or define them in ENV variables:
+
+ - `FLICKR_API_KEY`
+ - `FLICKR_SHARED_SECRET`
+ - `FLICKR_ACCESS_TOKEN`
+ - `FLICKR_ACCESS_SECRET`
+
 There is also an ability to generate cache. It will put all images references from each photoset. It will save **a lot of time** when you will have to regenerate all your posts. Cache are written in a yml file. Photoset ID is the file name.
 
 #### Rendering
